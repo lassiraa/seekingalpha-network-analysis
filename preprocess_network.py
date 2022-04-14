@@ -100,6 +100,12 @@ def remove_no_data_nodes(G):
     
     return G
 
+
+def remove_separated_nodes(G):
+    giant_component = max(nx.connected_components(G), key=len)
+    return G.subgraph(giant_component)
+
+
 if __name__ == '__main__':
     # skip fetching data, as some data is not included in repo
     G = nx.read_adjlist('SA_adj_list.txt')
@@ -107,4 +113,5 @@ if __name__ == '__main__':
         node_data = json.load(f)
     G = set_node_attrs(G, node_data)
     G = remove_no_data_nodes(G)
+    G = remove_separated_nodes(G)
     nx.write_gexf(G, "SA.gexf")
